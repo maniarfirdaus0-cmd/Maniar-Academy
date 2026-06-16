@@ -10,8 +10,10 @@ const app = express();
 connectDB();
 
 // cors() allows React frontend to communicate with this API
-app.use(cors());
-
+app.use(cors({
+  origin: ['https://maniar-academy.vercel.app/', 'http://localhost:5173'], 
+  credentials: true
+}));
 // express.json() parses incoming JSON request bodies
 app.use(express.json());
 
