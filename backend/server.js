@@ -11,7 +11,7 @@ connectDB();
 
 // cors() allows React frontend to communicate with this API
 app.use(cors({
-  origin: '*', // Try '*' temporarily to confirm it's a CORS issue
+  origin: 'https://maniar-academy.vercel.app', // Try '*' temporarily to confirm it's a CORS issue
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));

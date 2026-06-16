@@ -1,5 +1,4 @@
 // ── Replace with your real contact details ──────────────────────────
-const WHATSAPP_NUMBER = "919876543210"; 
 const WHATSAPP_MESSAGE = encodeURIComponent(
   "Hi Maniar Academy! I'd like to know more about your courses."
 );
@@ -8,7 +7,7 @@ const WHATSAPP_URL = `https://wa.me/${9374111023}?text=${WHATSAPP_MESSAGE}`;
 const socialLinks = [
   {
     label: "Instagram",
-    href: "https://instagram.com/maniaracademy",
+    href: "https://www.instagram.com/bintfaishal/",
     hover: "hover:border-pink-500/50 hover:bg-pink-500/10 hover:text-pink-400",
     icon: (
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -18,7 +17,7 @@ const socialLinks = [
   },
   {
     label: "YouTube",
-    href: "https://youtube.com/@maniaracademy",
+    href: "https://www.youtube.com/@ManiarTechzone",
     hover: "hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400",
     icon: (
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -28,7 +27,7 @@ const socialLinks = [
   },
   {
     label: "LinkedIn",
-    href: "https://linkedin.com/company/maniaracademy",
+    href: "https://www.linkedin.com/in/farman-maniar-a71841314/",
     hover: "hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:text-indigo-400",
     icon: (
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -38,7 +37,7 @@ const socialLinks = [
   },
   {
     label: "WhatsApp",
-    href: WHATSAPP_URL,
+    href: "https://wa.me/919999999999?text=Hi%2C%20I'm%20interested%20in%20Maniar%20Academy!",
     hover: "hover:border-green-500/50 hover:bg-green-500/10 hover:text-green-400",
     icon: (
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
