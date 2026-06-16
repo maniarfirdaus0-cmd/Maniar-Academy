@@ -37,7 +37,7 @@ const socialLinks = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/919999999999?text=Hi%2C%20I'm%20interested%20in%20Maniar%20Academy!",
+    href: "https://wa.me/919374111023?text=Hi%2C%20I'm%20interested%20in%20Maniar%20Academy!",
     hover: "hover:border-green-500/50 hover:bg-green-500/10 hover:text-green-400",
     icon: (
       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
