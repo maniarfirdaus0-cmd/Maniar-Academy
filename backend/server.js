@@ -11,7 +11,11 @@ connectDB();
 
 // cors() allows React frontend to communicate with this API
 app.use(cors({
-  origin: ['https://maniar-academy.vercel.app/', 'http://localhost:5173'], 
+  origin: [
+    'https://maniar-academy.vercel.app', // Your live Vercel domain
+    'http://localhost:5173'             // Keep this for local testing
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 // express.json() parses incoming JSON request bodies
