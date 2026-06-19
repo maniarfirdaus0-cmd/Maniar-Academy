@@ -75,6 +75,7 @@ export default function Footer({ onAdminClick }) {
                 Maniar <span className="text-accentViolet-light font-medium">Academy</span>
               </span>
             </a>
+            
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
               Premium IT education from absolute computer basics to full-stack
               development. Personalized mentoring for every learner.

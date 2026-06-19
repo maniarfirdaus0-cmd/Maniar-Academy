@@ -20,7 +20,18 @@
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 40s linear infinite;
+  /* Slower on small screens so course titles/details stay readable */
+  animation: marquee 100s linear infinite;
+}
+
+.marquee-paused {
+  animation-play-state: paused;
+}
+
+@media (min-width: 768px) {
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
 }
 
 @keyframes shimmer {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { fallbackCourses } from "../constants";
 
@@ -103,7 +103,15 @@ const getCourseDetails = (course) => {
   };
 };
 
-function CourseCard({ course, onEnquireClick }) {
+function CourseCard({
+  course,
+  onEnquireClick,
+  cardKey,
+  isFocused,
+  onFocusStart,
+  onFocusEnd,
+  onTogglePause,
+}) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const cardDetails = getCourseDetails(course);
 
@@ -117,7 +125,16 @@ function CourseCard({ course, onEnquireClick }) {
 
   return (
     <motion.article
+      tabIndex={0}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => onFocusStart(cardKey)}
+      onMouseLeave={onFocusEnd}
+      onFocus={() => onFocusStart(cardKey)}
+      onBlur={onFocusEnd}
+      onTouchStart={(e) => {
+        if (e.target.closest("button")) return;
+        onTogglePause(cardKey);
+      }}
       whileHover={{
         y: -8,
         scale: 1.025,
@@ -125,7 +142,11 @@ function CourseCard({ course, onEnquireClick }) {
         boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.6)",
       }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      className={`group relative w-80 shrink-0 overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-br ${course.accent || cardDetails.accentBg} bg-[#121215]/60 p-6 shadow-xl backdrop-blur-md transition-all duration-300 ${cardDetails.borderColor}`}
+      className={`group relative w-80 shrink-0 overflow-hidden rounded-2xl border bg-gradient-to-br ${course.accent || cardDetails.accentBg} bg-[#121215]/60 p-6 shadow-xl backdrop-blur-md transition-all duration-300 ${cardDetails.borderColor} ${
+        isFocused
+          ? "z-30 scale-[1.03] border-white/20 shadow-2xl shadow-black/50 ring-2 ring-accentViolet/40"
+          : "z-10 border-white/5"
+      }`}
     >
       {/* Radial Hover Glow (follows cursor) */}
       <div
@@ -188,6 +209,7 @@ function CourseCard({ course, onEnquireClick }) {
               e.stopPropagation();
               onEnquireClick(course.title);
             }}
+            onTouchStart={(e) => e.stopPropagation()}
             className="relative mt-5 overflow-hidden group/btn inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-accentViolet py-3 text-sm font-bold text-white transition-all shadow-md shadow-accentViolet/25 hover:shadow-lg hover:shadow-accentViolet/40 hover:bg-accentViolet-hover active:scale-95 z-10"
           >
             {/* Shimmer sweep effect */}
@@ -202,6 +224,40 @@ function CourseCard({ course, onEnquireClick }) {
 
 export default function CourseSlider({ courses = [], onEnquireClick }) {
   const displayCourses = courses && courses.length > 0 ? courses : fallbackCourses;
+  const [isPaused, setIsPaused] = useState(false);
+  const [focusedCardKey, setFocusedCardKey] = useState(null);
+  const resumeTimerRef = useRef(null);
+
+  const pauseOnCard = (cardKey) => {
+    clearTimeout(resumeTimerRef.current);
+    setIsPaused(true);
+    setFocusedCardKey(cardKey);
+  };
+
+  const scheduleResume = () => {
+    clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+      setFocusedCardKey(null);
+    }, 120);
+  };
+
+  const togglePauseOnCard = (cardKey) => {
+    clearTimeout(resumeTimerRef.current);
+    if (isPaused && focusedCardKey === cardKey) {
+      setIsPaused(false);
+      setFocusedCardKey(null);
+      return;
+    }
+    setIsPaused(true);
+    setFocusedCardKey(cardKey);
+  };
+
+  const resumeMarquee = () => {
+    clearTimeout(resumeTimerRef.current);
+    setIsPaused(false);
+    setFocusedCardKey(null);
+  };
 
   // We duplicate courses dynamically to ensure there are enough cards for a full marquee.
   // We double the dynamic set so the infinite scroll wraps seamlessly from 100% (-50% translateX) back to 0%.
@@ -233,26 +289,47 @@ export default function CourseSlider({ courses = [], onEnquireClick }) {
             Courses Built for Every Stage
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
-            Continuous autoscrolling marquee — hover over any card to pause and explore.
+            Courses scroll automatically — hover or tap a card to pause and read the details.
           </p>
         </div>
       </div>
 
       {/* Marquee Wrapper with fading edges */}
-      <div className="relative w-full overflow-hidden py-4 select-none">
+      <div
+        className={`relative w-full overflow-hidden py-4 ${isPaused ? "" : "select-none"}`}
+        onClick={resumeMarquee}
+      >
         {/* Soft edge blur masks for premium transition */}
         <div className="absolute left-0 top-0 bottom-0 w-20 md:w-36 bg-gradient-to-r from-[#09090b] to-transparent z-20 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-20 md:w-36 bg-gradient-to-l from-[#09090b] to-transparent z-20 pointer-events-none" />
 
+        {isPaused && (
+          <p className="pointer-events-none absolute left-1/2 top-0 z-30 -translate-x-1/2 rounded-full border border-white/10 bg-[#121215]/90 px-4 py-1.5 text-xs font-medium text-slate-300 backdrop-blur-sm">
+            Paused — move away or tap outside to resume
+          </p>
+        )}
+
         {/* Marquee container */}
-        <div className="flex w-max gap-6 animate-marquee py-3 hover:[animation-play-state:paused]">
-          {repeatedCourses.map((course, index) => (
-            <CourseCard
-              key={`${course._id || course.id}-${index}`}
-              course={course}
-              onEnquireClick={onEnquireClick}
-            />
-          ))}
+        <div
+          className={`flex w-max gap-6 animate-marquee py-3 ${isPaused ? "marquee-paused" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {repeatedCourses.map((course, index) => {
+            const cardKey = `${course._id || course.id}-${index}`;
+
+            return (
+              <CourseCard
+                key={cardKey}
+                cardKey={cardKey}
+                course={course}
+                isFocused={focusedCardKey === cardKey}
+                onFocusStart={pauseOnCard}
+                onFocusEnd={scheduleResume}
+                onTogglePause={togglePauseOnCard}
+                onEnquireClick={onEnquireClick}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
